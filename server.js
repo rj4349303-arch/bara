@@ -32,18 +32,31 @@ app.use(helmet({
 }));
 
 // CORS Configuration
+// CORS Configuration
 const allowedOrigins = [
-  ...(process.env.FRONTEND_URL || '').split(',').map(o => o.trim()).filter(Boolean),
-  'https://localhost'
+  'https://localhost',
+  'http://localhost',
+  ...(process.env.FRONTEND_URL || '')
+    .split(',')
+    .map(o => o.trim())
+    .filter(Boolean)
 ];
+
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps, curl, Postman)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV !== 'production') {
+    // Allow requests with no origin (mobile apps, Postman, etc.)
+    if (!origin) {
       return callback(null, true);
     }
-    return callback(new Error(`CORS policy blocked access from origin ${origin}`), false);
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(
+      new Error(`CORS policy blocked access from origin ${origin}`),
+      false
+    );
   },
   credentials: true,
   methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
