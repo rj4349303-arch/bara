@@ -32,38 +32,16 @@ app.use(helmet({
 }));
 
 // CORS Configuration
-const allowedOrigins = [
-  'https://localhost',
-  'http://localhost',
-  ...(process.env.FRONTEND_URL || '')
-    .split(',')
-    .map(o => o.trim())
-    .filter(Boolean)
-];
-
-console.log('[CORS DEBUG] Allowed origins:', allowedOrigins);
+// CORS Configuration
 app.use(cors({
-  origin: (origin, callback) => {
-    console.log('[CORS DEBUG] Incoming origin:', origin);
-    console.log('[CORS DEBUG] Is allowed:', allowedOrigins.includes(origin));
-
-    if (!origin) {
-      return callback(null, true);
-    }
-
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-
-    return callback(
-      new Error(`CORS policy blocked access from origin ${origin}`),
-      false
-    );
-  },
+  origin: true,
   credentials: true,
   methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
+
+// Explicitly handle preflight requests
+app.options('*', cors());
 // Body Parsers & Request Logging
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
