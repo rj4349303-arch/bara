@@ -32,10 +32,10 @@ app.use(helmet({
 }));
 
 // CORS Configuration
-const allowedOrigins = (process.env.FRONTEND_URL || 'http://localhost:3000')
-  .split(',')
-  .map(o => o.trim());
-
+const allowedOrigins = [
+  ...(process.env.FRONTEND_URL || '').split(',').map(o => o.trim()).filter(Boolean),
+  'https://localhost'
+];
 app.use(cors({
   origin: (origin, callback) => {
     // Allow requests with no origin (like mobile apps, curl, Postman)
