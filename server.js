@@ -32,7 +32,6 @@ app.use(helmet({
 }));
 
 // CORS Configuration
-// CORS Configuration
 const allowedOrigins = [
   'https://localhost',
   'http://localhost',
@@ -44,7 +43,6 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (mobile apps, Postman, etc.)
     if (!origin) {
       return callback(null, true);
     }
@@ -62,7 +60,6 @@ app.use(cors({
   methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
-
 // Body Parsers & Request Logging
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
